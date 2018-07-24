@@ -9,9 +9,11 @@ $mkdir safe;cd safe
 $git clone https://github.com/hktalent/myhktools.git
 # this project
 $git clone https://github.com/hktalent/vnetAutoTools.git
+$cd vnetAutoTools
+$
 $vi servers.txt
 # change to your vps shadowsocks info,eg:
-$cd vnetAutoTools
+
 $chmod +x loginVnetLink.sh
 #help 
 $./loginVnetLink.sh -h
@@ -36,7 +38,11 @@ Example:
 # so make run file
 $ls *.json
 proxychains.conf
+$curUser=`whoami`
 $chmod +x runAll.sh
+$ln -s ./proxychains.conf ~/safe/$curUser/proxychains.conf
+$brew install proxychains-ng
+# /usr/local/Cellar/proxychains-ng/4.12_1/bin/proxychains4
 $./runAll.sh
 
 

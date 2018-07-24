@@ -8,7 +8,15 @@ if [[ $1 == '-d' ]]
  then
   exit
 fi
-youSsLocal="/Users/${curUser}/Library/Application Support/ShadowsocksX-NG/ss-local"
+# /Applications/ShadowsocksX-NG.app/Contents/Resources/ss-local
+mydir="/Users/${curUser}/Library/Application Support/ShadowsocksX-NG"
+mkdir -p $mydir
+youSsLocal="${mydir}/ss-local"
+cd app
+ln -s "`pwd`/proxychains-ng" /usr/local/Cellar/proxychains-ng
+ln -s "`pwd`/ss-local" $youSsLocal
+cd ..
+
 echo >runTmp.sh
 ls -l *.json|grep -E '_\d+_\d+.json'|sed 's/.* //g'|xargs -n 1 -I {} echo '"'$youSsLocal'" -c {} -u &'>>runTmp.sh
 sh ./runTmp.sh
@@ -31,10 +39,11 @@ testOne()
 	echo "开始测试代理 $xn 端口的可用性"
 	kk="加拿大"
 	teststr=`curl -x "socks5://127.0.0.1:$xn" -s -o - http://ip.cn`
-	if [[ $teststr==*$kk* ]]
+	echo "无代理IP：$myCurIp"
+	if [[ $teststr =~ $myCurIp ]]
 	then
-	    echo "端口:$xn is ok $teststr"
-	else
 	    echo "端口:$xn not is ok $teststr"
+	else
+	    echo "端口:$xn is ok ${teststr}"
 	fi
 }
