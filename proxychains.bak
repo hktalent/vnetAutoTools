@@ -1,0 +1,12 @@
+random_chain
+# dynamic_chain按照列表中出现的代理服务器的先后顺序组成一条链，如果有代理服务器失效，则自动将其排除，但至少要有一个是有效的
+#dynamic_chain
+proxy_dns 
+quiet_mode
+remote_dns_subnet 224
+tcp_read_time_out 15000
+tcp_connect_time_out 8000
+localnet 127.0.0.0/255.0.0.0
+localnet 192.168.1.0/255.255.0.0
+localnet 172.16.1.0/255.255.0.0
+[ProxyList]

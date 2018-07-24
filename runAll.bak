@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+curUser=`whoami`
+cd /Users/${curUser}/safe/${curUser}
+pkill -9 ss-local
+pkill -9 node
+rm -rf runAllTmp.sh
+if [[ $1 == '-d' ]]
+ then
+  exit
+fi
+youSsLocal="/Users/${curUser}/Library/Application Support/ShadowsocksX-NG/ss-local"
+echo >runTmp.sh
+ls -l *.json|grep -E '_\d+_\d+.json'|sed 's/.* //g'|xargs -n 1 -I {} echo '"'$youSsLocal'" -c {} -u &'>>runTmp.sh
+sh ./runTmp.sh
+rm runTmp.sh
+
+myIp1=`ipconfig getifaddr bridge0`
+myIp2=`ipconfig getifaddr en0`
+echo "当前有线IP: $myIp1"
+echo "当前无线IP: $myIp2"
+
+/usr/local/Cellar/proxychains-ng/4.12_1/bin/proxychains4 -f ~/safe/$curUser/proxychains.conf node '/Users/'$curUser'/safe/myhktools/tools/mySocks5.js' -h 127.0.0.1 -p 15533 &
+
+netstat -lant|grep -v tcp6|grep LISTEN
+myCurIp=`curl -s -o - http://ip.cn|awk '{print $2}'|cut -d'：' -f2`
+echo 当前IP: $myCurIp
+
+testOne()
+{
+	xn=$1
+	echo "开始测试代理 $xn 端口的可用性"
+	kk="加拿大"
+	teststr=`curl -x "socks5://127.0.0.1:$xn" -s -o - http://ip.cn`
+	if [[ $teststr==*$kk* ]]
+	then
+	    echo "端口:$xn is ok $teststr"
+	else
+	    echo "端口:$xn not is ok $teststr"
+	fi
+}
