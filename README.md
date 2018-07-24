@@ -44,5 +44,5 @@ $./runAll.sh
 ```
 
 #demo 
-![demo1](https://github.com/hktalent/vnetAutoTools/demo/blob/master/bin/s1.png?raw=true)
-![demo2](https://github.com/hktalent/vnetAutoTools/demo/blob/master/bin/s2.png?raw=true)
+![demo1](https://raw.githubusercontent.com/hktalent/vnetAutoTools/master/demo/s1.png)
+![demo2](https://raw.githubusercontent.com/hktalent/vnetAutoTools/master/demo/s2.png)
