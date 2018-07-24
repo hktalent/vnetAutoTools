@@ -155,10 +155,11 @@ mylog "1、${end} login${newLine}"
 
 # 获取token
 mylog "2、$start get token......"
-token=`cat tmp.txt |tr -d '[\r\n]'|grep '{"data":"ok","status":1}'|grep -Eo 'Set-Cookie: PHPSESSID=([^;]+);'|sed 's/;.*//g'|sed 's/.*=//g'`
+token=`cat tmp.txt |tr -d '[\r\n]'|grep '{"data":"ok","status":1}'|grep -Eo ': PHPSESSID=([^;]+);'|sed 's/;.*//g'|sed 's/.*=//g'`
 rm tmp.txt
-if [ $token ]; then
-	mylog "login is "$ok": "$token
+if [ "$token" != '' ]; then
+	mylog 'login is '$ok': '$token
+	echo "[$token]"
 else
 	mylog "login $error"
 fi
