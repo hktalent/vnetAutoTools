@@ -5,7 +5,7 @@ auto login vnet.link and create more links
 
 $cd ~/
 $mkdir safe;cd safe
-# dependent
+# depends
 $git clone https://github.com/hktalent/myhktools.git
 # this project
 $git clone https://github.com/hktalent/vnetAutoTools.git

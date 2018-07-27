@@ -1,9 +1,11 @@
 #!/bin/bash
-socks5='socks5://127.0.0.1:1090'
+socks5='socks5://127.0.0.1:1099'
 username="xx"
 psd="xx"
 svFile="servers.txt"
 
+# mac connect 62
+# 38 conn not ok
 rd01=$((1 + RANDOM % 10))
 rd02=$((1 + RANDOM % 600))
 rd03=$((1 + RANDOM % 4565))
@@ -104,8 +106,16 @@ done
 # 恢复，后面用
 Length=${#svFiles[@]}
 
+
+#######test#########
+curUser=`whoami`
+mydir="/Users/${curUser}/Library/Application Support/ShadowsocksX-NG"
+mkdir -p $mydir
+youSsLocal="${mydir}/ss-local"
+
+
 # 获取已经创建的列表：./loginVnetLink.sh list
-nPort=1081
+nPort=2081
 getCreatedList()
 {
 	mylog "4、$start get created lists ..."
@@ -135,10 +145,26 @@ getCreatedList()
 \"timeout\":60,\
 \"local_port\":${nPort}\
 }">$jsonNm
-			echo "testOne ${nPort}" >>runAll.sh
-			echo "socks5	127.0.0.1	${nPort}">>proxychains.conf
+			
+			
+			mylog "test $jsonNm ...."
+			## test port
+			"$youSsLocal" -c $jsonNm -u &
+			teststr=`curl -x "socks5://127.0.0.1:${nPort}" -s -o - http://ip.cn`
+			proxyIp=`echo $teststr|grep -Eo '\d{1,}\.\d{1,}\.\d{1,}\.\d{1,}'`
+			proxyIp=`echo $proxyIp|sed 's/[\.:]//g'`
+			if [[ $jsonNm =~ $proxyIp ]]
+			then
+				mylog "$ok $jsonNm,and test is $ok"
+				kpid=`ps -ef|grep $jsonNm|grep -v 'grep'|awk '{print $2}'`
+				echo "pid: ["$kpid"]"
+				kpid=`kill -9 $kpid`
+				echo "testOne ${nPort}" >>runAll.sh
+				echo "socks5	127.0.0.1	${nPort}">>proxychains.conf
+			fi
+
+
 			let nPort+=1
-			mylog "$ok $jsonNm"
 			lstT=''
 		fi
 	done
@@ -196,6 +222,7 @@ nOld=$xNum
 getCreatedList
 ## 去重
 allLists=${myLists[@]}
+
 
 bBreak=''
 for k in ${selectLists}; do

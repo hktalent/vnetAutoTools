@@ -12,7 +12,9 @@ fi
 mydir="/Users/${curUser}/Library/Application Support/ShadowsocksX-NG"
 mkdir -p $mydir
 youSsLocal="${mydir}/ss-local"
-cd app
+
+mkdir app 2>/dev/null
+cd app 2>/dev/null
 ln -s "`pwd`/proxychains-ng" /usr/local/Cellar/proxychains-ng
 ln -s "`pwd`/ss-local" $youSsLocal
 cd ..
@@ -29,7 +31,7 @@ echo "当前无线IP: $myIp2"
 
 /usr/local/Cellar/proxychains-ng/4.12_1/bin/proxychains4 -f ~/safe/$curUser/proxychains.conf node '/Users/'$curUser'/safe/myhktools/tools/mySocks5.js' -h 127.0.0.1 -p 15533 &
 
-netstat -lant|grep -v tcp6|grep LISTEN
+
 myCurIp=`curl -s -o - http://ip.cn|awk '{print $2}'|cut -d'：' -f2`
 echo 当前IP: $myCurIp
 
@@ -37,13 +39,19 @@ testOne()
 {
 	xn=$1
 	echo "开始测试代理 $xn 端口的可用性"
-	kk="加拿大"
 	teststr=`curl -x "socks5://127.0.0.1:$xn" -s -o - http://ip.cn`
-	echo "无代理IP：$myCurIp"
-	if [[ $teststr =~ $myCurIp ]]
+	proxyIp=`echo $teststr|grep -Eo '\d{1,}\.\d{1,}\.\d{1,}\.\d{1,}'`
+	
+	if [[ $teststr != '' ]]
 	then
-	    echo "端口:$xn not is ok $teststr"
+		if [[ $teststr =~ $myCurIp ]]
+		then
+		    echo "端口:$xn not is ok $teststr"
+		else
+		    echo "端口:$xn is ok $proxyIp"
+		fi
 	else
-	    echo "端口:$xn is ok ${teststr}"
+		echo "端口:$xn not is ok $teststr"
 	fi
 }
+netstat -lant|grep -v tcp6|grep LISTEN
