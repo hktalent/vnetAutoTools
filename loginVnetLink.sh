@@ -126,7 +126,7 @@ getCreatedList()
 	lstT=''
 	cat runAll.bak>runAll.sh
 	cat proxychains.bak>proxychains.conf
-	
+	rm runTmp.sh
 	for k in ${myLists1}; do
 		if [ "$lstT" = "" ]; then
 			lstT=$k
@@ -156,6 +156,7 @@ getCreatedList()
 			if [[ $jsonNm =~ $proxyIp ]]
 			then
 				mylog "$ok $jsonNm,and test is $ok"
+				echo '"'$youSsLocal'" -c '$jsonNm' -u &' >>runTmp.sh
 				kpid=`ps -ef|grep $jsonNm|grep -v 'grep'|awk '{print $2}'`
 				echo "pid: ["$kpid"]"
 				kpid=`kill -9 $kpid`

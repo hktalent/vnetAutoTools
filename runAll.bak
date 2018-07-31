@@ -19,10 +19,10 @@ ln -s "`pwd`/proxychains-ng" /usr/local/Cellar/proxychains-ng
 ln -s "`pwd`/ss-local" $youSsLocal
 cd ..
 
-echo >runTmp.sh
-ls -l *.json|grep -E '_\d+_\d+.json'|sed 's/.* //g'|xargs -n 1 -I {} echo '"'$youSsLocal'" -c {} -u &'>>runTmp.sh
+# echo >runTmp.sh
+# ls -l *.json|grep -E '_\d+_\d+.json'|sed 's/.* //g'|xargs -n 1 -I {} echo '"'$youSsLocal'" -c {} --fast-open -u &'>>runTmp.sh
 sh ./runTmp.sh
-rm runTmp.sh
+# rm runTmp.sh
 
 myIp1=`ipconfig getifaddr bridge0`
 myIp2=`ipconfig getifaddr en0`
